@@ -21,76 +21,39 @@
 @media(min-width:741px){.mobile-cell-label{display:none}}
 @media(min-width:741px){.dashboard-grid>section{align-self:start}}
 
-/* Header integrado: usa a logo original sem moldura nem fundo retangular visivel. */
-.site-header{background:#14171b;border-bottom:3px solid #9b3134}
-.header-inner{min-height:92px;gap:22px}
-.brand{gap:16px}
-.brand-image{width:212px}
-.brand-image img{display:block;mix-blend-mode:screen}
-.brand-copy{padding-left:0;border-left:0;gap:0}
-.brand-copy strong{font-size:19px;letter-spacing:-.45px}
-.brand-copy small{color:#aeb5bf;font-size:12px}
-@media(min-width:741px) and (max-width:990px){.brand-copy{display:none}}
-@media(max-width:740px){
- .header-inner{padding:11px 14px 0;min-height:0}
- .brand{margin-bottom:11px;gap:13px}
- .brand-image{width:190px}
- .brand-copy{display:flex;text-align:left}
- .brand-copy strong{font-size:18px}
- .brand-copy small{font-size:11px}
+
+/* Marca Ramon — tamanhos controlados em um único lugar.
+   A logomarca já contém a identificação da oficina. */
+.site-header{background:#12151a;border-bottom:3px solid #9b3134}
+.header-inner{min-height:88px;gap:22px}
+.brand{gap:34px;min-width:0}
+.brand-image{width:180px;max-width:none;flex:0 0 180px}
+.brand-image img{width:100%;height:auto;display:block;mix-blend-mode:screen}
+.brand-copy{border-left:0;padding-left:0;display:flex;min-width:0;flex-direction:column}
+.brand-copy strong{font-size:19px;letter-spacing:-.35px;white-space:nowrap}
+.brand-copy small{font-size:12px;color:#adb5be;white-space:nowrap}
+@media(min-width:741px) and (max-width:1030px){
+ .brand{gap:22px}
+ .brand-image{width:174px;flex-basis:174px}
+ .brand-copy{display:none}
 }
-@media(max-width:420px){
- .brand-image{width:176px}
- .brand{gap:11px}
+@media(max-width:740px){
+ .header-inner{padding:9px 12px 0;min-height:0}
+ .brand{width:100%;margin:0 auto 12px;justify-content:center;gap:25px}
+ .brand-image{width:167px;flex:0 0 167px;max-width:none}
+ .brand-copy{display:flex;min-width:0;text-align:left}
+ .brand-copy strong{font-size:17px}
+ .brand-copy small{font-size:11px}
+ .header-nav{width:100%}
+}
+@media(max-width:360px){
+ .brand{gap:19px}
+ .brand-image{width:151px;flex-basis:151px}
  .brand-copy strong{font-size:16px}
  .brand-copy small{font-size:10px}
 }
-@media(max-width:355px){
- .brand-image{width:158px}
+@media(max-width:320px){
+ .brand{gap:16px}
+ .brand-image{width:142px;flex-basis:142px}
  .brand-copy strong{font-size:15px}
-}
-
-/* Cabeçalho: a marca já traz o nome da oficina; não repetir texto ao lado. */
-.site-header{background:#12151a}
-.brand{gap:0}
-.brand-image{width:226px;max-width:100%}
-.brand-image img{display:block;width:100%;height:auto;mix-blend-mode:screen}
-@media (max-width:740px){
-  .header-inner{padding:10px 12px 0}
-  .brand{display:flex;width:100%;justify-content:center;margin:0 auto 10px}
-  .brand-image{width:244px;max-width:calc(100vw - 32px)}
-  .header-nav{width:100%}
-}
-@media (max-width:420px){
-  .brand-image{width:222px;max-width:calc(100vw - 32px)}
-}
-
-/* Ajuste fino da marca: logo um pouco menor e mais respiro para o título. */
-@media (min-width: 991px) {
-  .brand{gap:24px}
-  .brand-image{width:207px}
-  .brand-copy{display:flex;min-width:max-content}
-}
-@media (min-width:741px) and (max-width:990px) {
-  .brand{gap:18px}
-  .brand-image{width:198px}
-  .brand-copy{display:none}
-}
-@media (max-width:740px) {
-  .brand{width:100%;gap:17px;justify-content:center;margin:0 auto 10px}
-  .brand-image{width:202px;max-width:none;flex:0 1 202px;min-width:0}
-  .brand-copy{display:flex;flex:0 0 auto;min-width:0;text-align:left}
-  .brand-copy strong{font-size:17px}
-  .brand-copy small{font-size:11px}
-}
-@media (max-width:380px) {
-  .brand{gap:14px}
-  .brand-image{width:184px;flex-basis:184px}
-  .brand-copy strong{font-size:16px}
-  .brand-copy small{font-size:10px}
-}
-@media (max-width:335px) {
-  .brand{gap:12px}
-  .brand-image{width:162px;flex-basis:162px}
-  .brand-copy strong{font-size:15px}
 }
