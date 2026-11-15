@@ -20,7 +20,7 @@ function pdfStream(bytes,attrs=''){return concat(ascii(`<< /Length ${bytes.lengt
 function jpegFromImage(img){const maxW=1080;const r=Math.min(1,maxW/img.width),c=document.createElement('canvas');c.width=Math.max(1,Math.round(img.width*r));c.height=Math.max(1,Math.round(img.height*r));const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);return {bytes:parseDataURL(c.toDataURL('image/jpeg',.85)),width:c.width,height:c.height};}
 async function getLogo(config){const src=config.logo||window.RAMON_LOGO_DATA;if(!src)return null;try{const img=await new Promise((resolve,reject)=>{const x=new Image();x.onload=()=>resolve(x);x.onerror=()=>reject(Error('Logo não carregada'));x.src=src;});return jpegFromImage(img);}catch(error){console.warn('PDF sem logo: imagem inválida.');return null;}}
 class Document{
- constructor(logo){this.logo=logo;this.pages=[];this.page=null;}
+ constructor(logo,photos=[]){this.logo=logo;this.photos=photos;this.pages=[];this.page=null;}
  addPage(){this.page={commands:[]};this.pages.push(this.page);return this.page;}
  cmd(s){this.page.commands.push(s);}
  color(c){return c.map(x=>Number(x).toFixed(3)).join(' ');}
@@ -28,7 +28,8 @@ class Document{
  line(x1,y1,x2,y2,color=LINE,width=.65){this.cmd(`q ${this.color(color)} RG ${width.toFixed(2)} w ${x1.toFixed(2)} ${(H-y1).toFixed(2)} m ${x2.toFixed(2)} ${(H-y2).toFixed(2)} l S Q`);}
  text(t,x,y,size=10,opts={}){const bold=!!opts.bold,c=opts.color||DARK,align=opts.align||'left',s=String(t??'');if(align==='right')x-=txtWidth(s,size,bold);else if(align==='center')x-=txtWidth(s,size,bold)/2;this.cmd(`BT /${bold?'F2':'F1'} ${size.toFixed(2)} Tf ${this.color(c)} rg 1 0 0 1 ${x.toFixed(2)} ${(H-y-size).toFixed(2)} Tm (${pdfEsc(s)}) Tj ET`);}
  image(x,y,w,h){if(this.logo)this.cmd(`q ${w.toFixed(2)} 0 0 ${h.toFixed(2)} ${x.toFixed(2)} ${(H-y-h).toFixed(2)} cm /Im1 Do Q`);}
- toBlob(){const objects=[null,null];const put=(v)=>{objects.push(v);return objects.length;};const fontRegular=put(pdfObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>'));const fontBold=put(pdfObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'));const imageID=this.logo?put(pdfStream(this.logo.bytes,`/Type /XObject /Subtype /Image /Width ${this.logo.width} /Height ${this.logo.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode`)):null;const pageIds=[];for(const p of this.pages){const body=binaryBytes(p.commands.join('\n')+'\n'),contentID=put(pdfStream(body));const resources=`/Font << /F1 ${fontRegular} 0 R /F2 ${fontBold} 0 R >> ${imageID?`/XObject << /Im1 ${imageID} 0 R >>`:''}`;const pageID=put(pdfObject(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << ${resources} >> /Contents ${contentID} 0 R >>`));pageIds.push(pageID);}objects[0]=pdfObject('<< /Type /Catalog /Pages 2 0 R >>');objects[1]=pdfObject(`<< /Type /Pages /Count ${pageIds.length} /Kids [${pageIds.map(i=>`${i} 0 R`).join(' ')}] >>`);const chunks=[ascii('%PDF-1.4\n%PDFmadeOffline\n')],offset=[0];let len=chunks[0].length;for(let n=0;n<objects.length;n++){offset.push(len);const bytes=concat(ascii(`${n+1} 0 obj\n`),objects[n],ascii('endobj\n'));chunks.push(bytes);len+=bytes.length;}const xrefStart=len;let xref=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;for(const at of offset.slice(1))xref+=`${String(at).padStart(10,'0')} 00000 n \n`;xref+=`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF\n`;chunks.push(ascii(xref));return new Blob(chunks,{type:'application/pdf'});}
+ photoImage(index,x,y,w,h){if(!this.photos[index])return;this.cmd(`q ${w.toFixed(2)} 0 0 ${h.toFixed(2)} ${x.toFixed(2)} ${(H-y-h).toFixed(2)} cm /Photo${index+1} Do Q`);}
+ toBlob(){const objects=[null,null];const put=(v)=>{objects.push(v);return objects.length;};const fontRegular=put(pdfObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>'));const fontBold=put(pdfObject('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'));const imageID=this.logo?put(pdfStream(this.logo.bytes,`/Type /XObject /Subtype /Image /Width ${this.logo.width} /Height ${this.logo.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode`)):null;const photoIDs=this.photos.map(pic=>put(pdfStream(pic.bytes,`/Type /XObject /Subtype /Image /Width ${pic.width} /Height ${pic.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode`)));const pageIds=[];for(const p of this.pages){const body=binaryBytes(p.commands.join('\n')+'\n'),contentID=put(pdfStream(body));const resources=`/Font << /F1 ${fontRegular} 0 R /F2 ${fontBold} 0 R >> ${imageID||photoIDs.length?`/XObject << ${imageID?`/Im1 ${imageID} 0 R`:''} ${photoIDs.map((id,n)=>`/Photo${n+1} ${id} 0 R`).join(' ')} >>`:''}`;const pageID=put(pdfObject(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << ${resources} >> /Contents ${contentID} 0 R >>`));pageIds.push(pageID);}objects[0]=pdfObject('<< /Type /Catalog /Pages 2 0 R >>');objects[1]=pdfObject(`<< /Type /Pages /Count ${pageIds.length} /Kids [${pageIds.map(i=>`${i} 0 R`).join(' ')}] >>`);const chunks=[ascii('%PDF-1.4\n%PDFmadeOffline\n')],offset=[0];let len=chunks[0].length;for(let n=0;n<objects.length;n++){offset.push(len);const bytes=concat(ascii(`${n+1} 0 obj\n`),objects[n],ascii('endobj\n'));chunks.push(bytes);len+=bytes.length;}const xrefStart=len;let xref=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;for(const at of offset.slice(1))xref+=`${String(at).padStart(10,'0')} 00000 n \n`;xref+=`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF\n`;chunks.push(ascii(xref));return new Blob(chunks,{type:'application/pdf'});}
 }
 // Diagramação compacta de A4: aproveita a primeira página, mantendo a paginação
 // automática para orçamentos que realmente não caibam em uma folha legível.
@@ -144,8 +145,39 @@ function footer(doc,q,config){
     doc.page=previous;
   }
 }
-async function generate(q,config,utils){
-  const logo=await getLogo(config),doc=new Document(logo),totals=utils.sums(q);
+function drawPhotoPages(doc,photos,q,config,utils){
+  // O anexo começa em uma nova folha e nunca muda a diagramação compacta do orçamento.
+  const perPage=2;
+  for(let start=0;start<photos.length;start+=perPage){
+    doc.addPage();doc.rect(0,0,W,4.5,RED);
+    if(doc.logo){const w=132,h=w*doc.logo.height/doc.logo.width;doc.image(M,18,w,h);}
+    else doc.text(fitText(config.name||'Ramon Retoques Automotivos',260,12,true),M,27,12,{bold:true});
+    if(doc.logo)doc.text(fitText(config.name||'Ramon Retoques Automotivos',290,10.7,true),225,22,10.7,{bold:true});
+    doc.text(`Orçamento ${q.code}`,225,39,8.7,{color:GRAY});
+    doc.line(M,82,W-M,82,RED,1.1);
+    doc.text('REGISTRO FOTOGRÁFICO DO VEÍCULO',M,95,13.2,{bold:true});
+    doc.text(fitText(`${q.vehicle||'Veículo'}  |  ${q.plate||'Sem placa'}  |  ${utils.prettyDate(q.date)}`,CW,8.8),M,116,8.8,{color:GRAY});
+    for(let local=0;local<perPage && start+local<photos.length;local++){
+      const i=start+local,photo=photos[i];
+      const frameX=M+9,frameY=139+local*306,frameW=CW-18,frameH=262;
+      doc.rect(M,frameY-9,CW,289,PALE);
+      const scale=Math.min(frameW/photo.width,frameH/photo.height);
+      const w=photo.width*scale,h=photo.height*scale;
+      const left=frameX+(frameW-w)/2,top=frameY+(frameH-h)/2;
+      doc.photoImage(i,left,top,w,h);
+      doc.text(`FOTO ${i+1} DE ${photos.length}`,M+10,frameY+266,8,{bold:true,color:GRAY});
+    }
+  }
+}
+async function generate(q,config,utils,photoInputs=[]){
+   const logo=await getLogo(config);
+   const photos=await Promise.all(photoInputs.map(async p=>{
+     if(!p?.blob||p.blob.type!=='image/jpeg')throw Error('Foto não suportada no PDF');
+     let width=Number(p.width),height=Number(p.height);
+     if(!width||!height){const objectUrl=URL.createObjectURL(p.blob);try{const img=await new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=reject;i.src=objectUrl;});width=img.naturalWidth;height=img.naturalHeight;}finally{URL.revokeObjectURL(objectUrl);}}
+     return {width,height,bytes:new Uint8Array(await p.blob.arrayBuffer())};
+   }));
+   const doc=new Document(logo,photos),totals=utils.sums(q);
   let y=drawHeader(doc,config,q,utils,true);
   const nextPage=(withTable=false)=>{let top=drawHeader(doc,config,q,utils,false);if(withTable)top=tableHead(doc,top);return top;};
   y=tableHead(doc,y);
@@ -171,6 +203,7 @@ async function generate(q,config,utils){
     doc.line(M,y+3,W-M,y+3,LINE,.65);
     doc.text(`Orçamento emitido em ${utils.prettyDate(q.date)}. Válido até ${utils.prettyDate(utils.plusDays(q.date,q.validDays))}.`,M,y+8,8.1,{color:GRAY});
   }
+  if(photos.length)drawPhotoPages(doc,photos,q,config,utils);
   footer(doc,q,config);return doc.toBlob();
 }
 window.RamonPDF={generate};

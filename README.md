@@ -7,10 +7,11 @@ Aplicação web **gratuita e local**, feita para orçamentos presenciais de lant
 1. Extraia o arquivo `.zip` inteiro; não retire o `index.html` das pastas `css`, `js` e `assets`.
 2. Abra `index.html` no navegador Chrome, Edge ou Safari, ou publique no GitHub Pages (abaixo).
 3. Toque em **Novo orçamento** e preencha o **cliente e veículo**.
-4. Marque as peças a reparar; informe os tipos de serviço, descrições, valores e, se aplicável, observações.
-5. Em **Valores**, informe eventuais serviços gerais, desconto e condições de pagamento.
-6. Em **Revisar e PDF**, confira e use **Gerar PDF**. Será gerado um documento A4 com a logo real, dados, tabela de serviços, valores, validade e condições. O arquivo pode ser enviado manualmente ao cliente.
-7. Em **Histórico**, você pode abrir, editar, duplicar, excluir ou baixar outro PDF.
+4. Em **Cliente e veículo**, você pode escolher ou tirar até **4 fotos** do veículo; marque **Incluir fotos no PDF** se desejar anexá-las ao documento.
+5. Marque as peças a reparar; informe os tipos de serviço, descrições, valores e, se aplicável, observações.
+6. Em **Valores**, informe eventuais serviços gerais, desconto e condições de pagamento.
+7. Em **Revisar e PDF**, confira e use **Gerar PDF**. Será gerado um documento A4 com a logo real, dados, tabela de serviços, valores, validade e condições. O arquivo pode ser enviado manualmente ao cliente.
+8. Em **Histórico**, você pode abrir, editar, duplicar, excluir ou baixar outro PDF.
 
 ### Como funcionam os valores
 
@@ -23,10 +24,10 @@ Aplicação web **gratuita e local**, feita para orçamentos presenciais de lant
 
 ## 2. Como preservar os dados
 
-Os dados ficam no `localStorage` deste **navegador e aparelho**, não na nuvem. Eles **não são sincronizados** entre PC e celular. Apagar dados do navegador, usar modo anônimo ou trocar de aparelho pode eliminar os registros.
+Os dados de texto ficam no `localStorage` e as fotos compactadas ficam no **IndexedDB**, ambos deste **navegador e aparelho**, não na nuvem. Eles **não são sincronizados** entre PC e celular. Apagar dados do navegador, usar modo anônimo ou trocar de aparelho pode eliminar os registros.
 
 - Clique em **Histórico → Backup**, ou **Início → Exportar backup**.
-- Guarde o arquivo `.json` fora do dispositivo, em local seguro.
+- Guarde o arquivo `.json` fora do dispositivo, em local seguro. **O backup atualizado inclui também as fotos** (o arquivo pode ficar maior).
 - Para recuperar, escolha **Importar** no Histórico. **A importação substitui os registros e as configurações existentes** após confirmação.
 - Como orçamentos incluem dados pessoais, proteja o telefone/computador e os backups.
 
@@ -45,6 +46,8 @@ Todos os caminhos são relativos; funciona em repositórios com subpasta. **Hosp
 
 ## 4. PDF e acesso à internet
 
+O PDF fica com uma página sempre que couber. Quando **Incluir fotos no PDF** estiver marcado, ele acrescenta folhas de registro fotográfico (até duas imagens por folha), após o orçamento.
+
 O gerador de PDF vem no próprio projeto (`js/pdf.js`), **sem CDNs nem bibliotecas externas**. Produz PDFs A4 com texto selecionável e logo incorporada. **O layout compacto tenta caber em uma página em orçamentos comuns**; quando o conteúdo é muito longo, o PDF continua em páginas adicionais para não cortar informações. Não cria uma página extra só para repetir a data de validade. O site em si não precisa de internet para gerar um PDF depois de carregado. O site no GitHub Pages precisa de acesso para **abrir a página**; não há service worker, portanto não é garantido que a página volte a abrir sem conexão.
 
 No celular, o botão **Compartilhar PDF** usa o compartilhamento nativo quando disponível. Se não for possível, o PDF é baixado. **Mensagem no WhatsApp** abre uma conversa com texto genérico; o PDF deve ser anexado manualmente.
@@ -58,10 +61,11 @@ No celular, o botão **Compartilhar PDF** usa o compartilhamento nativo quando d
 - Serviços gerais, desconto, valores à vista/a prazo, formas de pagamento e validade.
 - Cálculos automáticos, confirmação de condições divergentes e indicação de valores pendentes.
 - PDF paginado A4 com logo, informações da oficina e valores.
-- Autosalvamento, histórico local, pesquisa, edição, duplicação, exclusão, backup JSON.
+- Autosalvamento, histórico local, pesquisa, edição, duplicação, exclusão e backup JSON **com fotos**.
+- Até 4 fotos opcionais do veículo, com prévia, exclusão e compressão; opção individual para anexar ou não ao PDF.
 - Configurações comerciais e possibilidade de trocar/restaurar a logo.
 
-**Fora desta versão:** fotografias por peça, assinaturas digitais, login, ordens de serviço, banco de dados online, sincronização entre aparelhos, envio automático de arquivos pelo WhatsApp e relatórios financeiros. Essas funções podem ser acrescentadas depois.
+**Fora desta versão:** fotografias específicas por peça, assinaturas digitais, login, ordens de serviço, banco de dados online, sincronização entre aparelhos, envio automático de arquivos pelo WhatsApp e relatórios financeiros. Essas funções podem ser acrescentadas depois.
 
 ## 6. Estrutura de arquivos
 
@@ -78,3 +82,11 @@ ramon-orcamentos/
 ```
 
 `logo-data.js` incorpora uma cópia otimizada da **logo fornecida**, permitindo que a imagem seja incluída no PDF mesmo quando o site é aberto localmente pelo `index.html`. A imagem PNG original está preservada na pasta `assets/`.
+
+## 7. Fotos — atenção
+
+- As fotos são opcionais e armazenadas só no navegador onde foram adicionadas. Elas **não sincronizam** com outros aparelhos.
+- Você pode tirar fotos pela câmera ou selecionar da galeria, revisar e apagar antes de gerar o PDF. Cada arquivo é comprimido para JPEG (máximo de 4 fotos por orçamento).
+- A caixa **Incluir fotos no PDF** é desmarcada por padrão. Com ela desmarcada, nenhuma foto aparece no documento. Marcada, as imagens são anexadas após o orçamento e podem gerar páginas extras.
+- Se você limpar os dados do site no navegador, poderá perder fotos e orçamentos. **Faça backups frequentes** e guarde o arquivo em lugar seguro.
+- Fotos não ficam públicas no GitHub: só os arquivos do site são hospedados lá.

@@ -57,3 +57,35 @@
  .brand-image{width:142px;flex-basis:142px}
  .brand-copy strong{font-size:15px}
 }
+
+/* Registro fotográfico opcional do veículo, sem alterar o layout do restante do sistema. */
+.vehicle-photo-section{min-width:0;margin-top:3px;padding-top:12px;border-top:1px solid var(--line)}
+.vehicle-photo-section>label:first-child{display:block;font-weight:750;margin-bottom:4px;color:var(--ink)}
+.optional-photo-label{color:var(--muted);font-size:12px;font-weight:500}
+.photo-hint,.photo-note{font-size:12px;line-height:1.55;color:var(--muted);margin:3px 0 11px}
+.photo-note{margin-top:10px;margin-bottom:0}
+.photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:14px 0}
+.photo-grid:empty{display:none}
+.photo-card{min-width:0;border:1px solid var(--line);overflow:hidden;border-radius:11px;background:#fff}
+.photo-preview{width:100%;aspect-ratio:4/3;background:#e7e9ec;display:flex;align-items:center;justify-content:center}
+.photo-preview img{display:block;width:100%;height:100%;object-fit:cover}
+.photo-card-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;font-size:12px;color:var(--muted)}
+.photo-card-foot button{color:var(--red);font-weight:750;border:0;background:none;padding:7px 3px;min-height:36px}
+.photo-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.photo-add{cursor:pointer;flex:1 1 140px}
+.photo-add.photo-disabled{opacity:.45;cursor:not-allowed;pointer-events:none}
+.photo-pdf-choice{display:flex;align-items:flex-start;gap:12px;cursor:pointer;border:1px solid #e6e4e6;border-radius:11px;background:#fafafa;padding:13px 14px;margin-top:15px;line-height:1.4}
+.photo-pdf-choice input{accent-color:var(--red);width:19px;height:19px;flex-shrink:0;margin:2px 0 0}
+.photo-pdf-choice strong{font-size:13px;color:var(--ink);display:block}
+.photo-pdf-choice small{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+.photo-pdf-choice:has(input:checked){border-color:#e1b3b3;background:#fff7f7}
+.photo-pdf-choice:has(input:disabled){opacity:.65;cursor:not-allowed}
+.review-photo-choice{margin-top:15px;padding:15px;border-radius:12px;border:1px solid var(--line)}
+.review-photo-choice>div>strong{display:block;font-size:13px}
+.review-photo-choice>div>small{color:var(--muted);font-size:12px}
+.review-photo-choice .photo-pdf-choice{margin-top:10px}
+@media(min-width:741px){.photo-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:400px){.photo-actions{flex-direction:column}.photo-add{width:100%;flex:0 0 auto}.photo-grid{gap:8px}}
+/* Especificidade para não herdar a regra genérica dos rótulos de formulário. */
+.vehicle-photo-section label.photo-pdf-choice,.review-photo-choice label.photo-pdf-choice{display:flex;align-items:flex-start;margin:14px 0 0;font-size:13px}
+.vehicle-photo-section .photo-actions label.photo-add{display:inline-flex;align-items:center;justify-content:center;font-size:13px;margin:0}
