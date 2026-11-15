@@ -7,7 +7,7 @@ Aplicação web **gratuita e local**, feita para orçamentos presenciais de lant
 1. Extraia o arquivo `.zip` inteiro; não retire o `index.html` das pastas `css`, `js` e `assets`.
 2. Abra `index.html` no navegador Chrome, Edge ou Safari, ou publique no GitHub Pages (abaixo).
 3. Toque em **Novo orçamento** e preencha o **cliente e veículo**.
-4. Em **Cliente e veículo**, você pode escolher ou tirar até **4 fotos** do veículo; marque **Incluir fotos no PDF** se desejar anexá-las ao documento.
+4. Em **Cliente e veículo**, você pode escolher ou tirar até **10 fotos** do veículo; marque **Incluir fotos no PDF** se desejar anexá-las ao documento.
 5. Marque as peças a reparar; informe os tipos de serviço, descrições, valores e, se aplicável, observações.
 6. Em **Valores**, informe eventuais serviços gerais, desconto e condições de pagamento.
 7. Em **Revisar e PDF**, confira e use **Gerar PDF**. Será gerado um documento A4 com a logo real, dados, tabela de serviços, valores, validade e condições. O arquivo pode ser enviado manualmente ao cliente.
@@ -62,7 +62,7 @@ No celular, o botão **Compartilhar PDF** usa o compartilhamento nativo quando d
 - Cálculos automáticos, confirmação de condições divergentes e indicação de valores pendentes.
 - PDF paginado A4 com logo, informações da oficina e valores.
 - Autosalvamento, histórico local, pesquisa, edição, duplicação, exclusão e backup JSON **com fotos**.
-- Até 4 fotos opcionais do veículo, com prévia, exclusão e compressão; opção individual para anexar ou não ao PDF.
+- Até 10 fotos opcionais do veículo, com prévia, exclusão e compressão; opção individual para anexar ou não ao PDF.
 - Configurações comerciais e possibilidade de trocar/restaurar a logo.
 
 **Fora desta versão:** fotografias específicas por peça, assinaturas digitais, login, ordens de serviço, banco de dados online, sincronização entre aparelhos, envio automático de arquivos pelo WhatsApp e relatórios financeiros. Essas funções podem ser acrescentadas depois.
@@ -86,7 +86,7 @@ ramon-orcamentos/
 ## 7. Fotos — atenção
 
 - As fotos são opcionais e armazenadas só no navegador onde foram adicionadas. Elas **não sincronizam** com outros aparelhos.
-- Use o botão **Inserir fotos** para escolher da galeria ou, caso o celular ofereça essa opção, tirar uma foto. Depois você pode revisar e apagar imagens antes de gerar o PDF. Cada arquivo é comprimido para JPEG (máximo de 4 fotos por orçamento).
+- Use o botão **Inserir fotos** para escolher da galeria ou, caso o celular ofereça essa opção, tirar uma foto. Depois você pode revisar e apagar imagens antes de gerar o PDF. Cada arquivo é comprimido para JPEG (máximo de 10 fotos por orçamento).
 - A caixa **Incluir fotos no PDF** é desmarcada por padrão. Com ela desmarcada, nenhuma foto aparece no documento. Marcada, as imagens são anexadas após o orçamento e podem gerar páginas extras.
 - Se você limpar os dados do site no navegador, poderá perder fotos e orçamentos. **Faça backups frequentes** e guarde o arquivo em lugar seguro.
 - Fotos não ficam públicas no GitHub: só os arquivos do site são hospedados lá.

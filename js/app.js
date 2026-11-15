@@ -22,7 +22,7 @@ let historyFilter = '';
 let savingError = false;
 let toastTimer = null;
 let store = loadStore();
-const PHOTO_LIMIT=4, PHOTO_FILE_MAX=15*1024*1024;
+const PHOTO_LIMIT=10, PHOTO_FILE_MAX=15*1024*1024;
 const PHOTO_DB='ramon_orcamentos_fotos_v1';
 let photoRenderToken=0;
 let activePhotoURLs=[];
