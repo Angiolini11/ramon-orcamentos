@@ -86,7 +86,7 @@ ramon-orcamentos/
 ## 7. Fotos — atenção
 
 - As fotos são opcionais e armazenadas só no navegador onde foram adicionadas. Elas **não sincronizam** com outros aparelhos.
-- Você pode tirar fotos pela câmera ou selecionar da galeria, revisar e apagar antes de gerar o PDF. Cada arquivo é comprimido para JPEG (máximo de 4 fotos por orçamento).
+- Use o botão **Inserir fotos** para escolher da galeria ou, caso o celular ofereça essa opção, tirar uma foto. Depois você pode revisar e apagar imagens antes de gerar o PDF. Cada arquivo é comprimido para JPEG (máximo de 4 fotos por orçamento).
 - A caixa **Incluir fotos no PDF** é desmarcada por padrão. Com ela desmarcada, nenhuma foto aparece no documento. Marcada, as imagens são anexadas após o orçamento e podem gerar páginas extras.
 - Se você limpar os dados do site no navegador, poderá perder fotos e orçamentos. **Faça backups frequentes** e guarde o arquivo em lugar seguro.
 - Fotos não ficam públicas no GitHub: só os arquivos do site são hospedados lá.
