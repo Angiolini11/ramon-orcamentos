@@ -56,18 +56,24 @@ function drawLogoContained(doc,x,y,maxWidth,maxHeight){
   if(!(width>0&&height>0))return;
   const scale=Math.min(maxWidth/width,maxHeight/height);
   const w=width*scale,h=height*scale;
-  doc.image(x+(maxWidth-w)/2,y+(maxHeight-h)/2,w,h);
+  // Alinha a borda esquerda real da logo com a margem M, onde começa a linha vermelha.
+  // Mantém centralização APENAS vertical, inclusive para logos quadradas ou estreitas.
+  const drawnX=x, drawnY=y+(maxHeight-h)/2;
+  doc.image(drawnX,drawnY,w,h);
+  // Retorna a área realmente ocupada pela logo. O texto não deve depender
+  // do espaço vazio da caixa reservada para logos de outros formatos.
+  return {x:drawnX,y:drawnY,width:w,height:h,right:drawnX+w};
 }
 function drawHeader(doc,config,q,utils,first){
   doc.addPage();doc.rect(0,0,W,4.5,RED);
   const y=first?21:18;
-  // Área reservada: página 1 = 150×62 pt; demais = 126×55 pt.
-  // Nenhuma dimensão da imagem altera as posições dos outros elementos do PDF.
-  // Ajuste óptico: a logo fica ligeiramente acima do centro geométrico
-  // da área reservada para alinhar visualmente com o bloco de textos à direita.
-  if(doc.logo)drawLogoContained(doc,M,y-(first?4:3),first?150:126,first?62:55);
-  else doc.text(fitText(config.name||'Ramon Retoques Automotivos',160,12,true),M,y+7,12,{bold:true});
-  const rx=first?210:191,aw=W-M-rx;
+  // A imagem mantém seu tamanho máximo, mas o texto começa sempre 18 pt
+  // depois do contorno REAL da logo, e não da caixa reservada de 150/126 pt.
+  // Assim logos quadradas, verticais e horizontais não deixam vãos exagerados.
+  // Mantém o ajuste óptico de altura definido para a logo.
+  const logoBox=doc.logo?drawLogoContained(doc,M,y-(first?4:3),first?150:126,first?62:55):null;
+  if(!doc.logo)doc.text(fitText(config.name||'Ramon Retoques Automotivos',160,12,true),M,y+7,12,{bold:true});
+  const rx=logoBox?logoBox.right+18:(first?210:191),aw=W-M-rx;
   doc.text(fitText(config.name||'Ramon Retoques Automotivos',aw,11.7,true),rx,y+1,11.7,{bold:true});
   if(config.responsible)doc.text(fitText(config.responsible,aw,8),rx,y+18,8,{color:GRAY});
   if(config.phone)doc.text(fitText('WhatsApp: '+config.phone,aw,8.5),rx,y+31,8.5);
@@ -165,11 +171,12 @@ function drawPhotoPages(doc,photos,q,config,utils){
   const perPage=2;
   for(let start=0;start<photos.length;start+=perPage){
     doc.addPage();doc.rect(0,0,W,4.5,RED);
-    // A mesma área fixa protege também o cabeçalho das páginas de fotos.
-    if(doc.logo)drawLogoContained(doc,M,18,132,54);
-    else doc.text(fitText(config.name||'Ramon Retoques Automotivos',260,12,true),M,27,12,{bold:true});
-    if(doc.logo)doc.text(fitText(config.name||'Ramon Retoques Automotivos',290,10.7,true),225,22,10.7,{bold:true});
-    doc.text(`Orçamento ${q.code}`,225,39,8.7,{color:GRAY});
+    // No anexo fotográfico, o texto também acompanha a largura real da logo.
+    const photoLogoBox=doc.logo?drawLogoContained(doc,M,18,132,54):null;
+    const photoTextX=photoLogoBox?photoLogoBox.right+18:225;
+    if(!doc.logo)doc.text(fitText(config.name||'Ramon Retoques Automotivos',260,12,true),M,27,12,{bold:true});
+    else doc.text(fitText(config.name||'Ramon Retoques Automotivos',W-M-photoTextX,10.7,true),photoTextX,22,10.7,{bold:true});
+    doc.text(`Orçamento ${q.code}`,photoTextX,39,8.7,{color:GRAY});
     doc.line(M,82,W-M,82,RED,1.1);
     doc.text('REGISTRO FOTOGRÁFICO DO VEÍCULO',M,95,13.2,{bold:true});
     doc.text(fitText(`${q.vehicle||'Veículo'}  |  ${q.plate||'Sem placa'}  |  ${utils.prettyDate(q.date)}`,CW,8.8),M,116,8.8,{color:GRAY});

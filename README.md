@@ -48,7 +48,7 @@ Todos os caminhos são relativos; funciona em repositórios com subpasta. **Hosp
 
 O PDF fica com uma página sempre que couber. Quando **Incluir fotos no PDF** estiver marcado, ele acrescenta folhas de registro fotográfico (até duas imagens por folha), após o orçamento.
 
-O gerador de PDF vem no próprio projeto (`js/pdf.js`), **sem CDNs nem bibliotecas externas**. Produz PDFs A4 com texto selecionável e logo incorporada. **O layout compacto tenta caber em uma página em orçamentos comuns**; quando o conteúdo é muito longo, o PDF continua em páginas adicionais para não cortar informações. Não cria uma página extra só para repetir a data de validade. O site em si não precisa de internet para gerar um PDF depois de carregado. O site no GitHub Pages precisa de acesso para **abrir a página**; não há service worker, portanto não é garantido que a página volte a abrir sem conexão.
+O gerador de PDF vem no próprio projeto (`js/pdf.js`), **sem CDNs nem bibliotecas externas**. Produz PDFs A4 com texto selecionável e logo incorporada. **O espaçamento entre a logo e os textos do cabeçalho se adapta à largura real da imagem** (horizontal, quadrada ou vertical). **O layout compacto tenta caber em uma página em orçamentos comuns**; quando o conteúdo é muito longo, o PDF continua em páginas adicionais para não cortar informações. Não cria uma página extra só para repetir a data de validade. O site em si não precisa de internet para gerar um PDF depois de carregado. O site no GitHub Pages precisa de acesso para **abrir a página**; não há service worker, portanto não é garantido que a página volte a abrir sem conexão.
 
 No celular, o botão **Compartilhar PDF** usa o compartilhamento nativo quando disponível. Se não for possível, o PDF é baixado. **Mensagem no WhatsApp** abre uma conversa com texto genérico; o PDF deve ser anexado manualmente.
 
@@ -100,3 +100,6 @@ No GitHub, atualize `index.html`, `css/style.css`, `js/app.js` e `js/pdf.js` par
 ## Ajuste fino do cabeçalho do PDF
 
 A logo foi elevada 4 pontos (aproximadamente 1,4 mm) na primeira página e 3 pontos nas continuações, para alinhar visualmente com os dados à direita. O tamanho, a proporção, os textos e demais funções não foram alterados. Ao atualizar um site existente no GitHub Pages, substitua `js/pdf.js` **e** `index.html` (este último inclui a versão nova do script para evitar o cache).
+
+## Ajuste do cabeçalho (novembro/2026)
+O PDF alinha a borda esquerda da logo à mesma margem em que começa a linha divisória vermelha. O texto acompanha a largura real da logo com 18 pt de distância.
