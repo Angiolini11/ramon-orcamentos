@@ -96,3 +96,7 @@ ramon-orcamentos/
 Ao trocar a logo em **Configurações → Trocar imagem**, o sistema **preserva a proporção e ajusta automaticamente** a imagem a uma área fixa no cabeçalho de todas as páginas do PDF (inclusive anexos fotográficos). Logos horizontais, quadradas e verticais são aceitas; nenhuma pode invadir o título ou os dados do orçamento. A prévia em Configurações também contém a logo dentro de um espaço limitado. A imagem não será esticada nem cortada.
 
 No GitHub, atualize `index.html`, `css/style.css`, `js/app.js` e `js/pdf.js` para aplicar a correção. O `index.html` inclui parâmetros de versão para evitar o uso de CSS e JS antigos guardados em cache. A logo configurada no navegador e os orçamentos existentes permanecem salvos.
+
+## Ajuste fino do cabeçalho do PDF
+
+A logo foi elevada 4 pontos (aproximadamente 1,4 mm) na primeira página e 3 pontos nas continuações, para alinhar visualmente com os dados à direita. O tamanho, a proporção, os textos e demais funções não foram alterados. Ao atualizar um site existente no GitHub Pages, substitua `js/pdf.js` **e** `index.html` (este último inclui a versão nova do script para evitar o cache).

@@ -63,7 +63,9 @@ function drawHeader(doc,config,q,utils,first){
   const y=first?21:18;
   // Área reservada: página 1 = 150×62 pt; demais = 126×55 pt.
   // Nenhuma dimensão da imagem altera as posições dos outros elementos do PDF.
-  if(doc.logo)drawLogoContained(doc,M,y,first?150:126,first?62:55);
+  // Ajuste óptico: a logo fica ligeiramente acima do centro geométrico
+  // da área reservada para alinhar visualmente com o bloco de textos à direita.
+  if(doc.logo)drawLogoContained(doc,M,y-(first?4:3),first?150:126,first?62:55);
   else doc.text(fitText(config.name||'Ramon Retoques Automotivos',160,12,true),M,y+7,12,{bold:true});
   const rx=first?210:191,aw=W-M-rx;
   doc.text(fitText(config.name||'Ramon Retoques Automotivos',aw,11.7,true),rx,y+1,11.7,{bold:true});
