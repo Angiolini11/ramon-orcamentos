@@ -90,3 +90,9 @@ ramon-orcamentos/
 - A caixa **Incluir fotos no PDF** é desmarcada por padrão. Com ela desmarcada, nenhuma foto aparece no documento. Marcada, as imagens são anexadas após o orçamento e podem gerar páginas extras.
 - Se você limpar os dados do site no navegador, poderá perder fotos e orçamentos. **Faça backups frequentes** e guarde o arquivo em lugar seguro.
 - Fotos não ficam públicas no GitHub: só os arquivos do site são hospedados lá.
+
+## 8. Padrão da logo no PDF
+
+Ao trocar a logo em **Configurações → Trocar imagem**, o sistema **preserva a proporção e ajusta automaticamente** a imagem a uma área fixa no cabeçalho de todas as páginas do PDF (inclusive anexos fotográficos). Logos horizontais, quadradas e verticais são aceitas; nenhuma pode invadir o título ou os dados do orçamento. A prévia em Configurações também contém a logo dentro de um espaço limitado. A imagem não será esticada nem cortada.
+
+No GitHub, atualize `index.html`, `css/style.css`, `js/app.js` e `js/pdf.js` para aplicar a correção. O `index.html` inclui parâmetros de versão para evitar o uso de CSS e JS antigos guardados em cache. A logo configurada no navegador e os orçamentos existentes permanecem salvos.

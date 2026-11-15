@@ -47,10 +47,23 @@ function drawInfoPanel(doc,x,y,w,h,title,lines){
   let at=y+22;
   for(let i=0;i<lines.length;i++){const l=lines[i];doc.text(l.t,x+10,at,l.size,{bold:l.bold,color:l.color});at+=l.step;if(i===0)at+=3;}
 }
+/** Desenha a logo dentro de uma área máxima fixa, sem distorção ou recorte.
+ * Isso protege título, linha divisória e dados mesmo com logos quadradas ou verticais.
+ */
+function drawLogoContained(doc,x,y,maxWidth,maxHeight){
+  if(!doc.logo)return;
+  const width=Number(doc.logo.width),height=Number(doc.logo.height);
+  if(!(width>0&&height>0))return;
+  const scale=Math.min(maxWidth/width,maxHeight/height);
+  const w=width*scale,h=height*scale;
+  doc.image(x+(maxWidth-w)/2,y+(maxHeight-h)/2,w,h);
+}
 function drawHeader(doc,config,q,utils,first){
   doc.addPage();doc.rect(0,0,W,4.5,RED);
-  const y=first?21:18,logoW=first?150:126,logoH=doc.logo?logoW*doc.logo.height/doc.logo.width:0;
-  if(doc.logo)doc.image(M,y,logoW,logoH);
+  const y=first?21:18;
+  // Área reservada: página 1 = 150×62 pt; demais = 126×55 pt.
+  // Nenhuma dimensão da imagem altera as posições dos outros elementos do PDF.
+  if(doc.logo)drawLogoContained(doc,M,y,first?150:126,first?62:55);
   else doc.text(fitText(config.name||'Ramon Retoques Automotivos',160,12,true),M,y+7,12,{bold:true});
   const rx=first?210:191,aw=W-M-rx;
   doc.text(fitText(config.name||'Ramon Retoques Automotivos',aw,11.7,true),rx,y+1,11.7,{bold:true});
@@ -150,7 +163,8 @@ function drawPhotoPages(doc,photos,q,config,utils){
   const perPage=2;
   for(let start=0;start<photos.length;start+=perPage){
     doc.addPage();doc.rect(0,0,W,4.5,RED);
-    if(doc.logo){const w=132,h=w*doc.logo.height/doc.logo.width;doc.image(M,18,w,h);}
+    // A mesma área fixa protege também o cabeçalho das páginas de fotos.
+    if(doc.logo)drawLogoContained(doc,M,18,132,54);
     else doc.text(fitText(config.name||'Ramon Retoques Automotivos',260,12,true),M,27,12,{bold:true});
     if(doc.logo)doc.text(fitText(config.name||'Ramon Retoques Automotivos',290,10.7,true),225,22,10.7,{bold:true});
     doc.text(`Orçamento ${q.code}`,225,39,8.7,{color:GRAY});
